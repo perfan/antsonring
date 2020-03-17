@@ -4,8 +4,8 @@
 ##
 
 # Replace variable below with the right folders for your openblas installation:
-BLAS_INC?=.
-BLAS_LIB?=.
+BLAS_INC = /home/b/bussmann/perfan/src/openBlas/include
+BLAS_LIB = /home/b/bussmann/perfan/src/openBlas/lib
 
 CXX=g++
 CXXFLAGS=-O3 -g -march=native -std=c++14 -I${BLAS_INC}
