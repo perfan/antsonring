@@ -14,11 +14,17 @@
 // perform a single time step for the random walkers
 void diffring_timestep(const rmatrix<double>& F, rvector<double>& P)
 {
-    ////////////////////////////////////////////////
-    //                                            //
-    // IMPLEMENT THIS AS PART OF YOUR ASSIGNMENT! //
-    //                                            //
-    ////////////////////////////////////////////////
+    int n = F.extent(0);
+    double a = 1.0, b = 0.0;  
+    double *rhs = new double[n];
+    
+    for(int i = 0; i < n; i++) { 
+        rhs[i] = P[i]; 
+    }
+
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, a, F[0], n, rhs, 1, b, P, 1);
+    delete [] rhs;
+
 }
 
 // fill the matrix needed in perform_time_step
@@ -53,11 +59,5 @@ void diffring_fill_timestep_matrix(rmatrix<double>& F, double D, double dt, doub
             F[i][i+1] = alpha;
         } 
     }
-
-    // for(int i = 0; i < n; i++) { 
-    //     for(int j = 0; j < n; j++)
-    //         std::cout << F[i][j] << std::setw(3);
-    //     std::cout << std::endl;
-    // } 
 
 }

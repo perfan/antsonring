@@ -11,6 +11,7 @@
 #include "diffring_output.h"
 #include "diffring_timestep.h"
 #include "parameters.h"
+#include "iostream"
 
 // the main function drives the simulation
 int main(int argc, char *argv[]) 
@@ -56,7 +57,7 @@ int main(int argc, char *argv[])
 
   // Initial output
   diffring_output(file, 0, time, P, outputcols);
-
+  
   // Time evolution
   for (int step = 1; step <= numSteps; step++) {
 
