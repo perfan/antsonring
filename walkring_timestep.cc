@@ -6,6 +6,7 @@
 
 #include "walkring_timestep.h"
 #include <random>
+#include <iostream>
 
 // Perform a single time step for the random walkers
 //
@@ -31,12 +32,38 @@
 //  the right).
 //
 void walkring_timestep(rvector<int>& walkerpositions, int N, double prob)
-{
-    ////////////////////////////////////////////////
-    //                                            //
-    // IMPLEMENT THIS AS PART OF YOUR ASSIGNMENT! //
-    //                                            //
-    ////////////////////////////////////////////////
+{   
+ 
+    std::random_device rd;              //  Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd());             //  Standard mersenne_twister_engine seeded with rd()
+    std::normal_distribution<double> dis(0.5, 0.2);
+    double r = dis(gen);
+
+    for (int i=0; i < walkerpositions.size(); i++)
+    {   
+        r = dis(gen);
+
+        if (r < prob && walkerpositions[i] < N-1 && walkerpositions[i] > 0){
+            walkerpositions[i] =  walkerpositions[i] - 1;
+        }
+
+        if (r > 1.0 - prob && walkerpositions[i] < N-1 && walkerpositions[i] > 0){
+            walkerpositions[i] =  walkerpositions[i] + 1;
+        }
+
+        if (walkerpositions[i] == N-1){
+            walkerpositions[i] =  1;
+        }
+
+        if (walkerpositions[i] == 0){
+            walkerpositions[i] =  N-2;
+        }
+
+        else {
+            walkerpositions[i] =  walkerpositions[i];
+        } 
+    }
+
 }
 
 

@@ -12,6 +12,7 @@
 #include "walkring_output.h"
 #include "walkring_timestep.h"
 #include "parameters.h"
+#include <iostream>
 
 // the main function drives the simulation
 int main(int argc, char *argv[]) 
@@ -54,8 +55,8 @@ int main(int argc, char *argv[])
   walkring_output(file, 0, time, N, w, outputcols);
 
   // Time evolution
-  for (int step = 1; step <= numSteps; step++) {
-
+  for (int step = 1; step <=numSteps /*numSteps*/ ; step++) {
+    //std::cout<<w[250]<<std::endl;
     // Compute next time point
     walkring_timestep(w, N, p);
 

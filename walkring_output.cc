@@ -48,8 +48,12 @@ void walkring_output(std::ofstream& file, int step, double time, int N, const rv
             << std::fixed << std::setprecision(4) << std::setw(8) << time << "   "
             << std::fixed << std::setprecision(4) << std::setw(8) << tt.silent_tock() << "   "
             << sparkhist(0, N, w, outputcols, true) << std::endl;
-}
+  //printing location of each walker
+  // for(int i=0; i<w.size(); i++)
+  //   std::cout << w[i] << " ";
+  // std::cout << std::endl;
 
+}
 // Finalize output
 // Arguments:
 //   file: the file object that was used
