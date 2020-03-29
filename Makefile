@@ -10,35 +10,23 @@ BLAS_LIB = /home/b/bussmann/perfan/src/openBlas/lib
 CXX=g++
 CXXFLAGS=-O3 -g -march=native -std=c++14 -I${BLAS_INC}
 LDFLAGS=-g -L${BLAS_LIB}
+OMPFLAGS=-lpthread
 LDLIBS=-lopenblas
 LD=${CXX}
 
-.PHONY: all clean distclean run rundiffring runwalkring
+.PHONY: all clean distclean run rundiffring 
 
-all: diffring walkring
+all: diffring
 
 help: Makefile
 	@sed -n 's/^##//p' $<
 
 ##  diffring: build diffring executable
 diffring: diffring.o diffring_timestep.o diffring_output.o parameters.o ticktock.o sparkline.o
-	${LD} ${LDFLAGS} -o diffring diffring.o diffring_timestep.o diffring_output.o parameters.o ticktock.o sparkline.o ${LDLIBS}
-
-##  walkring: build walkring executable
-walkring: walkring.o ticktock.o sparkline.o walkring_output.o walkring_timestep.o parameters.o
-	${LD} ${LDFLAGS} -o walkring walkring.o ticktock.o sparkline.o walkring_output.o walkring_timestep.o parameters.o ${LDLIBS}
+	${LD} ${LDFLAGS} -o diffring diffring.o diffring_timestep.o diffring_output.o parameters.o ticktock.o sparkline.o ${LDLIBS} ${OMPFLAGS}
 
 diffring.o: diffring.cc diffring_timestep.h
 	${CXX} ${CXXFLAGS} -c -o diffring.o diffring.cc
-
-walkring.o: walkring.cc walkring_output.h walkring_timestep.h parameters.h
-	${CXX} ${CXXFLAGS} -c -o walkring.o walkring.cc
-
-walkring_output.o: walkring_output.cc walkring_output.h
-	${CXX} ${CXXFLAGS} -c -o walkring_output.o walkring_output.cc
-
-walkring_timestep.o: walkring_timestep.cc walkring_timestep.h
-	${CXX} ${CXXFLAGS} -c -o walkring_timestep.o walkring_timestep.cc
 
 parameters.o: parameters.cc parameters.h
 	${CXX} ${CXXFLAGS} -c -o parameters.o parameters.cc
@@ -47,7 +35,7 @@ diffring_output.o: diffring_output.cc diffring_output.h
 	${CXX} ${CXXFLAGS} -c -o diffring_output.o diffring_output.cc
 
 diffring_timestep.o: diffring_timestep.cc diffring_timestep.h
-	${CXX} ${CXXFLAGS} -c -o diffring_timestep.o diffring_timestep.cc
+	${CXX} ${CXXFLAGS} -c -o diffring_timestep.o diffring_timestep.cc ${OMPFLAGS}
 
 ticktock.o: ticktock.cc ticktock.h sparkline.h
 	${CXX} ${CXXFLAGS} -c -o ticktock.o ticktock.cc
@@ -64,15 +52,12 @@ distclean: clean
 	\rm -f output.dat diffring walkring Doxyfile* html latex
 
 ##  run: execute the codes with parameters in params.ini
-run: rundiffring runwalkring
+run: rundiffring 
 
-##  rundiffring: execute diffring with parameters in params.ini
+##  rundiffring: execute parallel diffring with parameters in params.ini
 rundiffring: diffring params.ini
+	export OPENBLAS_NUM_THREADS=1; \
 	./diffring params.ini
-
-##  runwalkring: execute walkring with parameters in params.ini
-runwalkring: walkring params.ini
-	./walkring params.ini
 
 ##  doc: use doxygen to generate documentation in latex/refman.pdf
 doc:
